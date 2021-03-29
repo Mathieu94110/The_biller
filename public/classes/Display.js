@@ -11,10 +11,10 @@ export class Display {
         this.hiddenDiv.classList.remove("invisible");
         this.formContainer.innerHTML = "";
         if (docType === "invoice") {
-            this.BtnPrint.innerText = "Factures";
+            this.BtnPrint.innerText = "Imprimer la facture";
         }
         if (docType === "estimation") {
-            this.BtnPrint.innerText = "Devis";
+            this.BtnPrint.innerText = "Imprimer le devis";
         }
     }
 }

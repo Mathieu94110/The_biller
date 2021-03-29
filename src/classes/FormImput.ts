@@ -2,6 +2,8 @@ import { HasHtmlFormat } from "../interfaces/HasHtmlFormat.js";
 import { Datas } from "../classes/Datas.js";
 import { Display } from "./Display.js";
 import { HasRender } from "../interfaces/HasRender.js";
+import { HasPrint } from "../interfaces/HasPrint.js";
+import { Print } from "../classes/Print.js";
 
 export class FormInput {
   form: HTMLFormElement;
@@ -19,6 +21,7 @@ export class FormInput {
   container: HTMLDivElement;
   hiddenDiv: HTMLDivElement;
   BtnPrint: HTMLButtonElement;
+  BtnReload: HTMLButtonElement;
   constructor() {
     this.form = document.getElementById("form") as HTMLFormElement;
     this.type = document.getElementById("type") as HTMLSelectElement;
@@ -38,6 +41,9 @@ export class FormInput {
     ) as HTMLDivElement;
     this.hiddenDiv = document.getElementById("hiddenDiv") as HTMLDivElement;
     this.BtnPrint = document.getElementById("print") as HTMLButtonElement;
+    this.printListener(this.BtnPrint, this.container);
+    this.BtnReload = document.getElementById("reload") as HTMLButtonElement;
+    this.deleteListener(this.BtnReload);
   }
 
   private submitFormListener(): void {
@@ -99,6 +105,19 @@ export class FormInput {
     }
   }
 
+  private printListener(btn: HTMLButtonElement, container: HTMLDivElement) {
+    btn.addEventListener("click", () => {
+      let SelectedDoc: HasPrint;
+      SelectedDoc = new Print(container);
+      SelectedDoc.print();
+    });
+  }
+  private deleteListener(btn: HTMLButtonElement) {
+    btn.addEventListener("click", () => {
+      document.location.reload();
+      window.scroll(0, 0);
+    });
+  }
   private inputDatas():
     | [
         string,

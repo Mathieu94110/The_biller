@@ -1,5 +1,6 @@
 import { Datas } from "../classes/Datas.js";
 import { Display } from "./Display.js";
+import { Print } from "../classes/Print.js";
 export class FormInput {
     constructor() {
         this.form = document.getElementById("form");
@@ -18,6 +19,9 @@ export class FormInput {
         this.container = document.getElementById("document-container");
         this.hiddenDiv = document.getElementById("hiddenDiv");
         this.BtnPrint = document.getElementById("print");
+        this.printListener(this.BtnPrint, this.container);
+        this.BtnReload = document.getElementById("reload");
+        this.deleteListener(this.BtnReload);
     }
     submitFormListener() {
         this.form.addEventListener("submit", this.handleFormSubmit.bind(this));
@@ -36,6 +40,19 @@ export class FormInput {
             template = new Display(this.container, this.hiddenDiv, this.BtnPrint);
             template.render(docData, type);
         }
+    }
+    printListener(btn, container) {
+        btn.addEventListener("click", () => {
+            let SelectedDoc;
+            SelectedDoc = new Print(container);
+            SelectedDoc.print();
+        });
+    }
+    deleteListener(btn) {
+        btn.addEventListener("click", () => {
+            document.location.reload();
+            window.scroll(0, 0);
+        });
     }
     inputDatas() {
         const type = this.type.value;
