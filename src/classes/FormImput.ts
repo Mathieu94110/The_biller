@@ -1,5 +1,7 @@
-import { HasHtmlFormat } from "../interfaces/HasHtmlFormat";
+import { HasHtmlFormat } from "../interfaces/HasHtmlFormat.js";
 import { Datas } from "../classes/Datas.js";
+import { Display } from "./Display.js";
+import { HasRender } from "../interfaces/HasRender.js";
 
 export class FormInput {
   form: HTMLFormElement;
@@ -14,7 +16,9 @@ export class FormInput {
   price: HTMLInputElement;
   quantity: HTMLInputElement;
   tva: HTMLInputElement;
-
+  container: HTMLDivElement;
+  hiddenDiv: HTMLDivElement;
+  BtnPrint: HTMLButtonElement;
   constructor() {
     this.form = document.getElementById("form") as HTMLFormElement;
     this.type = document.getElementById("type") as HTMLSelectElement;
@@ -29,6 +33,11 @@ export class FormInput {
     this.quantity = document.getElementById("quantity") as HTMLInputElement;
     this.tva = document.getElementById("tva") as HTMLInputElement;
     this.submitFormListener();
+    this.container = document.getElementById(
+      "document-container"
+    ) as HTMLDivElement;
+    this.hiddenDiv = document.getElementById("hiddenDiv") as HTMLDivElement;
+    this.BtnPrint = document.getElementById("print") as HTMLButtonElement;
   }
 
   private submitFormListener(): void {
@@ -83,9 +92,13 @@ export class FormInput {
         tva,
         date
       );
-      console.log(docData.htmlFormat);
+      console.log(docData.htmlFormat());
+      let template: HasRender;
+      template = new Display(this.container, this.hiddenDiv, this.BtnPrint);
+      template.render(docData, type);
     }
   }
+
   private inputDatas():
     | [
         string,
