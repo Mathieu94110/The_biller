@@ -22,6 +22,9 @@ export class FormInput {
   hiddenDiv: HTMLDivElement;
   BtnPrint: HTMLButtonElement;
   BtnReload: HTMLButtonElement;
+  BtnStoredInvoices: HTMLButtonElement;
+  BtnStoredEstimates: HTMLButtonElement;
+  StoredData: HTMLDivElement;
   constructor() {
     this.form = document.getElementById("form") as HTMLFormElement;
     this.type = document.getElementById("type") as HTMLSelectElement;
@@ -44,8 +47,15 @@ export class FormInput {
     this.printListener(this.BtnPrint, this.container);
     this.BtnReload = document.getElementById("reload") as HTMLButtonElement;
     this.deleteListener(this.BtnReload);
+    this.BtnStoredInvoices = document.getElementById(
+      "stored-invoices"
+    ) as HTMLButtonElement;
+    this.BtnStoredEstimates = document.getElementById(
+      "stored-estimates"
+    ) as HTMLButtonElement;
+    this.StoredData = document.getElementById("stored-data") as HTMLDivElement;
+    this.getDocsListener();
   }
-
   private submitFormListener(): void {
     this.form.addEventListener("submit", this.handleFormSubmit.bind(this));
   }
@@ -118,6 +128,46 @@ export class FormInput {
       window.scroll(0, 0);
     });
   }
+
+  private getDocsListener(): void {
+    this.BtnStoredInvoices.addEventListener(
+      "click",
+      this.getItems.bind(this, "invoice")
+    );
+    this.BtnStoredEstimates.addEventListener(
+      "click",
+      this.getItems.bind(this, "estimate")
+    );
+  }
+
+  private getItems(docType: string) {
+    if (this.StoredData.hasChildNodes()) {
+      this.StoredData.innerHTML = "";
+    }
+    if (localStorage.getItem(docType)) {
+      let array: string | null;
+      array = localStorage.getItem(docType);
+      if (array !== null && array.length > 2) {
+        let arrayData: string[];
+        arrayData = JSON.parse(array);
+        arrayData.map((doc: string): void => {
+          let card: HTMLDivElement = document.createElement("div");
+          let cardBody: HTMLDivElement = document.createElement("div");
+          let cardClasses: Array<string> = ["card", "mt-5"];
+          let cardBodyClasses: string = "card-body";
+
+          card.classList.add(...cardClasses);
+          cardBody.classList.add(cardBodyClasses);
+          cardBody.innerHTML = doc;
+          card.append(cardBody);
+          this.StoredData.append(card);
+        });
+      } else {
+        this.StoredData.innerHTML = `<div>Pas de données à afficher !</div>`;
+      }
+    }
+  }
+
   private inputDatas():
     | [
         string,

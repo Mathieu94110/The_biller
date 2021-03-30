@@ -22,6 +22,10 @@ export class FormInput {
         this.printListener(this.BtnPrint, this.container);
         this.BtnReload = document.getElementById("reload");
         this.deleteListener(this.BtnReload);
+        this.BtnStoredInvoices = document.getElementById("stored-invoices");
+        this.BtnStoredEstimates = document.getElementById("stored-estimates");
+        this.StoredData = document.getElementById("stored-data");
+        this.getDocsListener();
     }
     submitFormListener() {
         this.form.addEventListener("submit", this.handleFormSubmit.bind(this));
@@ -53,6 +57,37 @@ export class FormInput {
             document.location.reload();
             window.scroll(0, 0);
         });
+    }
+    getDocsListener() {
+        this.BtnStoredInvoices.addEventListener("click", this.getItems.bind(this, "invoice"));
+        this.BtnStoredEstimates.addEventListener("click", this.getItems.bind(this, "estimate"));
+    }
+    getItems(docType) {
+        if (this.StoredData.hasChildNodes()) {
+            this.StoredData.innerHTML = "";
+        }
+        if (localStorage.getItem(docType)) {
+            let array;
+            array = localStorage.getItem(docType);
+            if (array !== null && array.length > 2) {
+                let arrayData;
+                arrayData = JSON.parse(array);
+                arrayData.map((doc) => {
+                    let card = document.createElement("div");
+                    let cardBody = document.createElement("div");
+                    let cardClasses = ["card", "mt-5"];
+                    let cardBodyClasses = "card-body";
+                    card.classList.add(...cardClasses);
+                    cardBody.classList.add(cardBodyClasses);
+                    cardBody.innerHTML = doc;
+                    card.append(cardBody);
+                    this.StoredData.append(card);
+                });
+            }
+            else {
+                this.StoredData.innerHTML = `<div>Pas de données à afficher !</div>`;
+            }
+        }
     }
     inputDatas() {
         const type = this.type.value;

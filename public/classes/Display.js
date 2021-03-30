@@ -1,3 +1,4 @@
+import { Storage } from "../classes/Storage.js";
 export class Display {
     constructor(container, hiddenDiv, BtnPrint) {
         this.container = container;
@@ -16,5 +17,6 @@ export class Display {
         if (docType === "estimation") {
             this.BtnPrint.innerText = "Imprimer le devis";
         }
+        new Storage(docType, htmlString);
     }
 }
